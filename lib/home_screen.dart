@@ -4,6 +4,7 @@ import 'package:mcx/chart/chart_screen.dart';
 import 'package:mcx/home_notifier.dart';
 import 'package:mcx/market/market_screen.dart';
 import 'package:mcx/profile/profile_screen.dart';
+import 'package:mcx/trade/trade_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -13,7 +14,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  final screens = [MarketScreen(), ChartScreen(), ProfileScreen()];
+  final screens = [MarketScreen(), ChartScreen(),TradeScreen(), ProfileScreen()];
   @override
   Widget build(BuildContext context) {
     final currentIndex = ref.watch(homeNotifierProvider);
@@ -27,6 +28,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: currentIndex,
         onTap: (value) {
           ref.read(homeNotifierProvider.notifier).state = value;
@@ -40,7 +42,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             icon: Icon(Icons.bar_chart_rounded),
             label: 'Chart',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.multiple_stop),
+            label: 'Trade',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
         ],
       ),
     );
