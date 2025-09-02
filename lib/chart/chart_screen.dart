@@ -5,6 +5,7 @@ import 'package:k_chart_plus/k_chart_widget.dart';
 import 'package:mcx/chart/buy_grain_sheet.dart';
 import 'package:mcx/chart/chart_notifier.dart';
 import 'package:mcx/chart/chart_notifier2.dart';
+import 'package:mcx/chart/sell_grain_sheet.dart';
 import 'package:mcx/data/market_notifier.dart';
 import 'package:mcx/home_notifier.dart';
 
@@ -46,7 +47,7 @@ class _ChartScreenState extends ConsumerState<ChartScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      button(name: 'SELL',color: Colors.redAccent),
+                      button(name: 'SELL',color: Colors.redAccent,onClick: onSellClick),
                       button(name: 'BUY',onClick: onBuyClick),
                     ],
                   ),
@@ -72,6 +73,10 @@ class _ChartScreenState extends ConsumerState<ChartScreen> {
   }
   onBuyClick(){
     BuyGrainSheet.show(context);
+  }
+  onSellClick(){
+    SellGrainSheet.show(context);
+
   }
 
   Widget button({required String name, VoidCallback? onClick,
