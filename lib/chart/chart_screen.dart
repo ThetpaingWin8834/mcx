@@ -47,8 +47,12 @@ class _ChartScreenState extends ConsumerState<ChartScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      button(name: 'SELL',color: Colors.redAccent,onClick: onSellClick),
-                      button(name: 'BUY',onClick: onBuyClick),
+                      button(
+                        name: 'SELL',
+                        color: Colors.redAccent,
+                        onClick: onSellClick,
+                      ),
+                      button(name: 'BUY', onClick: onBuyClick),
                     ],
                   ),
                 ),
@@ -57,7 +61,7 @@ class _ChartScreenState extends ConsumerState<ChartScreen> {
                       .map((e) => e.toKLineEntity())
                       .toList(),
                   ChartStyle(),
-                  ChartColors(),
+                  ChartColors(bgColor: colorScheme.surface),
                   isLine: !useCandle,
 
                   hideGrid: false,
@@ -71,16 +75,20 @@ class _ChartScreenState extends ConsumerState<ChartScreen> {
             ),
     );
   }
-  onBuyClick(){
+
+  onBuyClick() {
     BuyGrainSheet.show(context);
   }
-  onSellClick(){
-    SellGrainSheet.show(context);
 
+  onSellClick() {
+    SellGrainSheet.show(context);
   }
 
-  Widget button({required String name, VoidCallback? onClick,
-  Color color = Colors.blue}) {
+  Widget button({
+    required String name,
+    VoidCallback? onClick,
+    Color color = Colors.blue,
+  }) {
     return GestureDetector(
       onTap: onClick,
       child: Container(
@@ -90,15 +98,14 @@ class _ChartScreenState extends ConsumerState<ChartScreen> {
         width: 100,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          color: color
+          color: color,
         ),
-        child: Text(name,style: TextStyle(
-          color: getContrastColor(color)
-        ),),
+        child: Text(name, style: TextStyle(color: getContrastColor(color))),
       ),
     );
   }
 }
+
 Color getContrastColor(Color background) {
   // Compute relative luminance (0 = dark, 1 = light)
   final double luminance = background.computeLuminance();
