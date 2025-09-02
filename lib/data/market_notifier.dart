@@ -22,21 +22,12 @@ class Grain {
   }
 }
 
-class MarketNotifier extends StateNotifier<List<Grain>> {
-  MarketNotifier()
-    : super([
-        Grain(name: 'Rice', openPrice: 100000, currentPrice: 100000),
-        Grain(name: 'Bean', openPrice: 150000, currentPrice: 150000),
-        Grain(name: 'Chilli', openPrice: 50000, currentPrice: 50000),
-      ]) {
-    _startSimulation();
-  }
-
+class MarketNotifier extends Notifier<List<Grain>> {
   final _random = Random();
   Timer? _timer;
 
   void _startSimulation() {
-    _timer = Timer.periodic(const Duration(seconds: 3), (_) {
+    _timer = Timer.periodic(const Duration(seconds: 2), (_) {
       _updatePrices();
     });
   }
@@ -50,14 +41,19 @@ class MarketNotifier extends StateNotifier<List<Grain>> {
   }
 
   @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
+  List<Grain> build() {
+    ref.onDispose(() {
+      _timer?.cancel();
+    });
+    _startSimulation();
+    return [
+      Grain(name: 'Rice', openPrice: 100000, currentPrice: 100000),
+      Grain(name: 'Bean', openPrice: 150000, currentPrice: 150000),
+      Grain(name: 'Chilli', openPrice: 50000, currentPrice: 50000),
+    ];
   }
 }
 
-final marketProvider = StateNotifierProvider<MarketNotifier, List<Grain>>((
-  ref,
-) {
+final marketProvider = NotifierProvider<MarketNotifier, List<Grain>>(() {
   return MarketNotifier();
 });
