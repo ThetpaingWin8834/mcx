@@ -52,9 +52,9 @@ class MarketNotifier extends Notifier<List<Grain>> {
     });
     _startSimulation();
     return [
-      Grain(name: 'Rice', openPrice: 100000, currentPrice: 100000),
-      Grain(name: 'Bean', openPrice: 150000, currentPrice: 150000),
-      Grain(name: 'Chilli', openPrice: 50000, currentPrice: 50000),
+      Grain(name: 'RICE', openPrice: 100000, currentPrice: 100000),
+      Grain(name: 'BEAN', openPrice: 150000, currentPrice: 150000),
+      Grain(name: 'CHILLI', openPrice: 50000, currentPrice: 50000),
     ];
   }
 }
