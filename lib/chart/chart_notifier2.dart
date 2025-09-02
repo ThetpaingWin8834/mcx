@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:k_chart_plus/entity/k_line_entity.dart';
 
 import 'package:mcx/data/market_notifier.dart';
-import 'package:mcx/home_notifier.dart';
 
 class CandleModel {
   final double open;
@@ -29,24 +28,25 @@ class CandleModel {
 }
 
 final chartNotifierProvider =
-    NotifierProvider<ChartNotifier2, List<CandleModel>>(ChartNotifier2.new);
+    NotifierProvider<ChartNotifier2, List<List<CandleModel>>>(ChartNotifier2.new);
 
-class ChartNotifier2 extends Notifier<List<CandleModel>> {
-  DateTime? _currentCandleStart;
+class ChartNotifier2 extends Notifier<List<List<CandleModel>>> {
+  final Map<String, List<CandleModel>> _grainCandles = {};
+  final Map<String, DateTime?> _grainCandleStarts = {};
 
   @override
-  List<CandleModel> build() {
-    ref.listen(marketProvider, (previous, next) {
-      final currentIndex = ref.read(selectedGrainNotifierProvider);
-      _sync(
-        previous == null ? null : previous[currentIndex],
-        next[currentIndex],
-      );
-    });
+  List<List<CandleModel>> build() {
     return [];
   }
 
-  _sync(Grain? previous, Grain next) {
+  void onMarketChanged(List<Grain> grains) {
+    for (final grain in grains) {
+      _sync(grain, grain.name);
+    }
+    state = _grainCandles.values.toList();
+  }
+
+  _sync(Grain next, String grainName) {
     final double price = next.currentPrice.toDouble();
     final now = DateTime.now();
     // Floor current time to the start of this minute (e.g., 10:03:45 -> 10:03:00)
@@ -58,10 +58,12 @@ class ChartNotifier2 extends Notifier<List<CandleModel>> {
       now.minute,
     );
 
+    DateTime? currentCandleStart = _grainCandleStarts[grainName];
+    List<CandleModel> candles = _grainCandles[grainName] ?? [];
+
     // If this is the first tick or we've moved into a new minute, start a new candle
-    if (_currentCandleStart == null ||
-        minuteStart.isAfter(_currentCandleStart!)) {
-      _currentCandleStart = minuteStart;
+    if (currentCandleStart == null || minuteStart.isAfter(currentCandleStart)) {
+      _grainCandleStarts[grainName] = minuteStart;
 
       final entity = CandleModel(
         open: price,
@@ -72,38 +74,39 @@ class ChartNotifier2 extends Notifier<List<CandleModel>> {
         time: minuteStart.millisecondsSinceEpoch,
       );
 
-      // append new candle
-      state = [...state, entity];
+      candles = [...candles, entity];
+      _grainCandles[grainName] = candles;
       return;
     }
 
     // Otherwise we're still within the current minute: update the last candle in place
-    if (state.isEmpty) {
-      // Safety: if for some reason state is empty, create the initial candle
+    if (candles.isEmpty) {
+      // Safety: if for some reason candles is empty, create the initial candle
       final entity = CandleModel(
         open: price,
         close: price,
         high: price,
         low: price,
         vol: 1.0,
-        time: _currentCandleStart!.millisecondsSinceEpoch,
+        time: currentCandleStart!.millisecondsSinceEpoch,
       );
-      state = [entity];
+      candles = [entity];
+      _grainCandles[grainName] = candles;
       return;
     }
 
-    final last = state.last;
+    final last = candles.last;
     final updated = CandleModel(
       open: last.open,
       close: price,
       high: price > last.high ? price : last.high,
       low: price < last.low ? price : last.low,
       vol: (last.vol) + 1.0,
-      time: _currentCandleStart!.millisecondsSinceEpoch,
+      time: currentCandleStart!.millisecondsSinceEpoch,
     );
 
-    // Replace the last candle with the updated one so UI updates immediately on each tick
-    state = [...state.sublist(0, state.length - 1), updated];
+    candles = [...candles.sublist(0, candles.length - 1), updated];
+    _grainCandles[grainName] = candles;
   }
 }
 
