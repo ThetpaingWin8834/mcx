@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -7,9 +6,9 @@ import 'package:mcx/home_notifier.dart';
 import 'package:mcx/user_notifier.dart';
 
 class SellGrainSheet extends ConsumerStatefulWidget {
-  static show(BuildContext context){
+  static show(BuildContext context) {
     showModalBottomSheet(
-      context: context, 
+      context: context,
       useSafeArea: true,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
@@ -18,6 +17,7 @@ class SellGrainSheet extends ConsumerStatefulWidget {
       builder: (context) => SellGrainSheet(),
     );
   }
+
   const SellGrainSheet({super.key});
 
   @override
@@ -26,7 +26,7 @@ class SellGrainSheet extends ConsumerStatefulWidget {
 
 class _SellGrainSheetState extends ConsumerState<SellGrainSheet> {
   TradeOptions tradeOptions = TradeOptions.market;
-  final priceController =  TextEditingController();
+  final priceController = TextEditingController();
   final amountController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   @override
@@ -49,13 +49,13 @@ class _SellGrainSheetState extends ConsumerState<SellGrainSheet> {
     final textTheme = Theme.of(context).textTheme;
 
     ref.listen(marketProvider, (previous, next) {
-      if(tradeOptions == TradeOptions.limit){
+      if (tradeOptions == TradeOptions.limit) {
         return;
       }
       final index = ref.read(selectedGrainNotifierProvider);
       final grain = next[index];
       priceController.text = grain.currentPrice.toString();
-    },);
+    });
     final user = ref.watch(userNotifierProvider);
     return SingleChildScrollView(
       child: Container(
@@ -87,9 +87,14 @@ class _SellGrainSheetState extends ConsumerState<SellGrainSheet> {
                 ),
               ),
               const SizedBox(height: 16),
-              Text('Balance: ${user.currentBalance}',style: textTheme.labelLarge?.copyWith(color: colorScheme.primary),),
+              Text(
+                'Balance: ${user.currentBalance}',
+                style: textTheme.labelLarge?.copyWith(
+                  color: colorScheme.primary,
+                ),
+              ),
               const SizedBox(height: 16),
-           
+
               DropdownSelector(
                 tradeOptions: tradeOptions,
                 onChanged: (value) {
@@ -107,54 +112,61 @@ class _SellGrainSheetState extends ConsumerState<SellGrainSheet> {
               ),
               const SizedBox(height: 20),
               AmountInputRow(
-                formKey:formKey,
+                formKey: formKey,
                 tradeOptions: tradeOptions,
                 amountController: amountController,
               ),
               ValueListenableBuilder(
                 valueListenable: amountController,
                 builder: (context, value, child) {
-                  final amount = int.tryParse(value.text)??0;
-                  final percent = ( amount/ user.currentBalance).clamp(0, 1).toDouble();
+                  final amount = int.tryParse(value.text) ?? 0;
+                  final percent = (amount / user.currentBalance)
+                      .clamp(0, 1)
+                      .toDouble();
                   return Column(
                     children: [
                       Row(
                         children: [
                           Expanded(
-                            child: Slider(value: percent, onChanged: (value) {
-                              amountController.text = (user.currentBalance * value).round().toString();
-                            }),
+                            child: Slider(
+                              value: percent,
+                              onChanged: (value) {
+                                amountController.text =
+                                    (user.currentBalance * value)
+                                        .round()
+                                        .toString();
+                              },
+                            ),
                           ),
-                          Text('${(percent * 100).round()}%')
+                          Text('${(percent * 100).round()}%'),
                         ],
                       ),
-              ValueListenableBuilder(
-                valueListenable: priceController,
-                builder: (context, value, child) {
-                  final price = (num.tryParse(value.text)??0).round();
-                  final available =  amount / price;
-                  return Text('Available: ${available.toStringAsFixed(1)}',style: textTheme.labelLarge?.copyWith(color: Colors.green),);
-                }
-              ),
-                      
+                      ValueListenableBuilder(
+                        valueListenable: priceController,
+                        builder: (context, value, child) {
+                          final price = (num.tryParse(value.text) ?? 0).round();
+                          final available = amount / price;
+                          return Text(
+                            'Available: ${available.toStringAsFixed(1)}',
+                            style: textTheme.labelLarge?.copyWith(
+                              color: Colors.green,
+                            ),
+                          );
+                        },
+                      ),
                     ],
                   );
-                }
+                },
               ),
               const SizedBox(height: 28),
-              BuyButton(
-                onPressed: () {},
-              ),
+              BuyButton(onPressed: () {}),
             ],
           ),
         ),
       ),
     );
   }
-
 }
-
-
 
 class SheetHandleIndicator extends StatelessWidget {
   const SheetHandleIndicator({super.key});
@@ -200,16 +212,21 @@ class DropdownSelector extends StatelessWidget {
         value: tradeOptions,
         isExpanded: true,
         underline: const SizedBox.shrink(),
-        style: textTheme.titleMedium?.copyWith(fontSize: 16, color: Colors.black87),
-        items: TradeOptions.values.map(
-          (e) => DropdownMenuItem<TradeOptions>(
-            value: e,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              child: Text(e.displayName),
-            ),
-          ),
-        ).toList(),
+        style: textTheme.titleMedium?.copyWith(
+          fontSize: 16,
+          color: Colors.black87,
+        ),
+        items: TradeOptions.values
+            .map(
+              (e) => DropdownMenuItem<TradeOptions>(
+                value: e,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Text(e.displayName),
+                ),
+              ),
+            )
+            .toList(),
         onChanged: onChanged,
         dropdownColor: Theme.of(context).canvasColor,
         iconEnabledColor: colorScheme.primary,
@@ -245,11 +262,11 @@ class PriceInputRow extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: TextField(
-             readOnly: tradeOptions != TradeOptions.limit, 
+              readOnly: tradeOptions != TradeOptions.limit,
               controller: priceController,
               decoration: const InputDecoration(
                 isDense: true,
-                border: InputBorder.none
+                border: InputBorder.none,
               ),
             ),
           ),
@@ -258,15 +275,17 @@ class PriceInputRow extends StatelessWidget {
     );
   }
 }
+
 class AmountInputRow extends ConsumerWidget {
   final TradeOptions tradeOptions;
   final TextEditingController amountController;
-  final GlobalKey<FormState>  formKey;
+  final GlobalKey<FormState> formKey;
 
   const AmountInputRow({
     super.key,
     required this.tradeOptions,
-    required this.amountController, required this.formKey,
+    required this.amountController,
+    required this.formKey,
   });
 
   @override
@@ -293,7 +312,7 @@ class AmountInputRow extends ConsumerWidget {
                 isDense: true,
                 border: InputBorder.none,
               ),
-                autovalidateMode: AutovalidateMode.always,
+              autovalidateMode: AutovalidateMode.always,
               validator: (value) {
                 final entered = int.tryParse(value ?? '') ?? 0;
                 if (entered > user.currentBalance) {
@@ -308,13 +327,11 @@ class AmountInputRow extends ConsumerWidget {
     );
   }
 }
+
 class BuyButton extends StatelessWidget {
   final VoidCallback onPressed;
 
-  const BuyButton({
-    super.key,
-    required this.onPressed,
-  });
+  const BuyButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -332,7 +349,9 @@ class BuyButton extends StatelessWidget {
           ),
           backgroundColor: colorScheme.primary,
           foregroundColor: colorScheme.onPrimary,
-          textStyle: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+          textStyle: textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
           elevation: 4,
           shadowColor: colorScheme.primary.withOpacity(0.4),
         ),
@@ -342,9 +361,11 @@ class BuyButton extends StatelessWidget {
   }
 }
 
-enum TradeOptions{
-  market,limit;
-  String get displayName => switch(this){
+enum TradeOptions {
+  market,
+  limit;
+
+  String get displayName => switch (this) {
     TradeOptions.market => 'Market Price',
     TradeOptions.limit => 'Limit',
   };
