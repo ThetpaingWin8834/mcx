@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:k_chart_flutter/k_chart_flutter.dart';
+import 'package:k_chart_plus/chart_style.dart';
+import 'package:k_chart_plus/k_chart_widget.dart';
 import 'package:mcx/chart/chart_notifier.dart';
+import 'package:mcx/chart/chart_notifier2.dart';
 import 'package:mcx/data/market_notifier.dart';
 import 'package:mcx/home_notifier.dart';
 
@@ -12,23 +14,18 @@ class ChartScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentGrainIndex = ref.watch(selectedGrainNotifierProvider);
     final currentGrain = ref.read(marketProvider)[currentGrainIndex];
-    final candles = ref.watch(chartProvider(currentGrainIndex));
+    final candles = ref.watch(chartNotifierProvider);
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(title: Text("MCX . Chart [${currentGrain.name}]")),
       body: candles.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : KChartWidget(
-              data: candles,
-              style: ChartStyle(
-                depth: DepthColors(),
-                colors: ChartColors(
-                  background: [colorScheme.surface, colorScheme.surface],
-                ),
-              ),
+              candles.map((e) => e.toKLineEntity()).toList(),
+              ChartStyle(),
+              ChartColors(),
               isLine: false,
-              mainState: MainState.NONE,
-              secondaryState: SecondaryState.NONE,
+
               hideGrid: false,
               showNowPrice: true,
               showInfoDialog: true,
@@ -38,14 +35,4 @@ class ChartScreen extends ConsumerWidget {
             ),
     );
   }
-}
-
-class MyChartColors extends ChartColors {
-  @override
-  Color get upColor => Colors.green;
-
-  @override
-  Color get downColor => Colors.red;
-
-  // Add any other color overrides you need
 }
