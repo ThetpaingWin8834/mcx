@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mcx/chart/chart_screen.dart';
+import 'package:mcx/chart/chart_screen2.dart';
 import 'package:mcx/home_notifier.dart';
 import 'package:mcx/market/market_screen.dart';
 import 'package:mcx/profile/profile_screen.dart';
