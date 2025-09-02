@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mcx/chart/chart_notifier2.dart';
 
 class Grain {
   final String name;
@@ -35,9 +36,13 @@ class MarketNotifier extends Notifier<List<Grain>> {
   void _updatePrices() {
     state = state.map((grain) {
       final changeOptions = [500, -500, 1000, -1000];
-      final change = changeOptions[_random.nextInt(changeOptions.length)];
-      return grain.copyWith(currentPrice: grain.currentPrice + change);
+      return grain.copyWith(
+        currentPrice:
+            grain.currentPrice +
+            changeOptions[_random.nextInt(changeOptions.length)],
+      );
     }).toList();
+    ref.read(chartNotifierProvider.notifier).onMarketChanged(state);
   }
 
   @override
