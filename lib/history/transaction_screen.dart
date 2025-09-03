@@ -25,6 +25,7 @@ class _TransactionScreenState extends ConsumerState<TransactionScreen> {
       type: 'buy, in',
       lotSize: 0.03,
       price: 120000,
+      profit: 36000,
       timestamp: '2025.09.02 07:40:28',
     ),
     TransactionItem(
@@ -50,7 +51,7 @@ class _TransactionScreenState extends ConsumerState<TransactionScreen> {
       lotSize: 0.03,
       price: 230000,
       timestamp: '2025.09.02 07:56:59',
-      profit: -3449999,
+      profit: -34000,
     ),
     TransactionItem(
       pair: getRandomName(),
@@ -71,7 +72,7 @@ class _TransactionScreenState extends ConsumerState<TransactionScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Column(
-              children: [AccountStatRow(label: 'Profit:', value: '34000')],
+              children: [AccountStatRow(label: 'Profit:', value: '34,000')],
             ),
           ),
           Divider(color: Theme.of(context).colorScheme.surfaceContainerHighest),
