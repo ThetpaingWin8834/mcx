@@ -169,7 +169,7 @@ class DottedLine extends StatelessWidget {
     super.key,
     this.height = 4,
     this.dotSpacing = 6,
-    this.dotSize = 3,
+    this.dotSize = 2,
   });
 
   @override
@@ -202,7 +202,7 @@ class SectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.grey.shade100,
+      color: Theme.of(context).colorScheme.surfaceContainerHigh,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Text(
         title,
