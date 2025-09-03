@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mcx/deposit/deposit_screen.dart';
+import 'package:mcx/withdraw/withdraw_screen.dart';
 
 class ProfileActionButton extends StatelessWidget {
   final IconData icon;
@@ -145,7 +146,14 @@ class ProfileScreen extends StatelessWidget {
                 const SizedBox(width: 16),
                 Expanded(
                   child: FilledButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => WithdrawScreen(),
+                        ),
+                      );
+                    },
                     icon: const Icon(Icons.arrow_upward),
                     label: const Text("Withdraw"),
                     style: FilledButton.styleFrom(
