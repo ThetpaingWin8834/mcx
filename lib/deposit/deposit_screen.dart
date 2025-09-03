@@ -28,55 +28,77 @@ class _DepositScreenState extends ConsumerState<DepositScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Deposit')),
-      body: ListView.builder(
-        itemCount: banks.length,
-        itemBuilder: (context, index) {
-          final bank = banks[index];
-          final isSelected = _selectedBankIndex == index;
-          return InkWell(
-            onTap: () {
-              setState(() {
-                _selectedBankIndex = index;
-              });
-            },
-            child: Container(
-              color: isSelected ? Colors.blue.shade100 : null,
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              child: Row(
-                children: [
-                  Text(
-                    bank['icon'] ?? '',
-                    style: const TextStyle(fontSize: 32),
+      body: SizedBox(
+        height: 140,
+        child: ListView.builder(
+          padding: const EdgeInsets.all(12),
+          scrollDirection: Axis.horizontal,
+          itemCount: banks.length,
+          itemBuilder: (context, index) {
+            final bank = banks[index];
+            final isSelected = _selectedBankIndex == index;
+            return Padding(
+              padding: const EdgeInsets.only(right: 12),
+              child: GestureDetector(
+                onTap: () => setState(() => _selectedBankIndex = index),
+                child: Container(
+                  width: 160,
+                  decoration: BoxDecoration(
+                    color: isSelected ? Colors.blue.shade50 : Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: isSelected
+                        ? Border.all(color: Colors.blue, width: 2)
+                        : Border.all(color: Colors.grey.shade300),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          bank['name'] ?? '',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        bank['icon'] ?? '',
+                        style: const TextStyle(fontSize: 32),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        bank['name'] ?? '',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
                         ),
-                        Text(
-                          _maskAccountNumber(bank['account'] ?? ''),
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey,
-                          ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        _maskAccountNumber(bank['account'] ?? ''),
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
                         ),
-                      ],
-                    ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const Spacer(),
+                      if (isSelected)
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Icon(Icons.check_circle, color: Colors.blue),
+                        ),
+                    ],
                   ),
-                  if (isSelected)
-                    const Icon(Icons.check_circle, color: Colors.blue),
-                ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
