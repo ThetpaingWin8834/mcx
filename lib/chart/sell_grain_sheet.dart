@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mcx/chart/buy_grain_sheet.dart';
 
 import 'package:mcx/data/market_notifier.dart';
 import 'package:mcx/home_notifier.dart';
@@ -55,7 +56,9 @@ class _SellGrainSheetState extends ConsumerState<SellGrainSheet> {
       }
       final index = ref.read(selectedGrainNotifierProvider);
       final grain = next[index];
-      priceController.text = grain.currentPrice.toString();
+      priceController.text = ThousandsSeparatorInputFormatter.formatNumber(
+        grain.currentPrice,
+      );
     });
     final user = ref.watch(userNotifierProvider);
     return SingleChildScrollView(
@@ -120,7 +123,8 @@ class _SellGrainSheetState extends ConsumerState<SellGrainSheet> {
               ValueListenableBuilder(
                 valueListenable: amountController,
                 builder: (context, value, child) {
-                  final amount = int.tryParse(value.text) ?? 0;
+                  final amount =
+                      int.tryParse(value.text.replaceAll(',', '')) ?? 0;
                   final percent = (amount / user.currentBalance)
                       .clamp(0, 1)
                       .toDouble();
@@ -133,9 +137,9 @@ class _SellGrainSheetState extends ConsumerState<SellGrainSheet> {
                               value: percent,
                               onChanged: (value) {
                                 amountController.text =
-                                    (user.currentBalance * value)
-                                        .round()
-                                        .toString();
+                                    ThousandsSeparatorInputFormatter.formatNumber(
+                                      (user.currentBalance * value).round(),
+                                    );
                               },
                             ),
                           ),
@@ -145,7 +149,10 @@ class _SellGrainSheetState extends ConsumerState<SellGrainSheet> {
                       ValueListenableBuilder(
                         valueListenable: priceController,
                         builder: (context, value, child) {
-                          final price = (num.tryParse(value.text) ?? 0).round();
+                          final price =
+                              (num.tryParse(value.text.replaceAll(',', '')) ??
+                                      0)
+                                  .round();
                           final available = amount / price;
                           return Text(
                             'Available: ${available.toStringAsFixed(1)}',
@@ -237,99 +244,6 @@ class DropdownSelector extends StatelessWidget {
   }
 }
 
-class PriceInputRow extends StatelessWidget {
-  final TradeOptions tradeOptions;
-  final TextEditingController priceController;
-
-  const PriceInputRow({
-    super.key,
-    required this.tradeOptions,
-    required this.priceController,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHighest.withValues(alpha: .3),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Text('Price:', style: textTheme.bodyMedium),
-          const SizedBox(width: 12),
-          Expanded(
-            child: TextField(
-              readOnly: tradeOptions != TradeOptions.limit,
-              controller: priceController,
-              decoration: const InputDecoration(
-                isDense: true,
-                border: InputBorder.none,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class AmountInputRow extends ConsumerWidget {
-  final TradeOptions tradeOptions;
-  final TextEditingController amountController;
-  final GlobalKey<FormState> formKey;
-
-  const AmountInputRow({
-    super.key,
-    required this.tradeOptions,
-    required this.amountController,
-    required this.formKey,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-    final user = ref.watch(userNotifierProvider);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHighest.withValues(alpha: .3),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Text('Amount:', style: textTheme.bodyMedium),
-          const SizedBox(width: 12),
-          Expanded(
-            child: TextFormField(
-              controller: amountController,
-              keyboardType: const TextInputType.numberWithOptions(),
-              decoration: const InputDecoration(
-                isDense: true,
-                border: InputBorder.none,
-              ),
-              autovalidateMode: AutovalidateMode.always,
-              validator: (value) {
-                final entered = int.tryParse(value ?? '') ?? 0;
-                if (entered > user.currentBalance) {
-                  return 'Exceeds balance (${user.currentBalance})';
-                }
-                return null;
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class SellButton extends StatelessWidget {
   final VoidCallback onPressed;
 
@@ -361,14 +275,4 @@ class SellButton extends StatelessWidget {
       ),
     );
   }
-}
-
-enum TradeOptions {
-  market,
-  limit;
-
-  String get displayName => switch (this) {
-    TradeOptions.market => 'Market Price',
-    TradeOptions.limit => 'Limit',
-  };
 }
