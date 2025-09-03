@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mcx/chart/chart_screen.dart';
+import 'package:mcx/history/transaction_screen.dart';
 import 'package:mcx/home_notifier.dart';
 import 'package:mcx/market/market_screen.dart';
 import 'package:mcx/profile/profile_screen.dart';
@@ -14,7 +15,13 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  final screens = [MarketScreen(), ChartScreen(),TradeScreen(), ProfileScreen()];
+  final screens = [
+    MarketScreen(),
+    ChartScreen(),
+    TradeScreen(),
+    TransactionScreen(),
+    ProfileScreen(),
+  ];
   @override
   Widget build(BuildContext context) {
     final currentIndex = ref.watch(homeNotifierProvider);
@@ -47,9 +54,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             label: 'Trade',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
+            icon: Icon(Icons.history_rounded),
+            label: 'History',
           ),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
       ),
     );
