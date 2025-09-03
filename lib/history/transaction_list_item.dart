@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mcx/history/transaction_item.dart';
+import 'package:mcx/market/market_screen.dart';
 
 class TransactionListItem extends StatelessWidget {
   final TransactionItem item;
@@ -48,7 +49,7 @@ class TransactionListItem extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  'in ${item.lotSize} at ${item.price.round()}',
+                  'in ${item.lotSize} at ${formatCurrencyAmount(item.price)}',
                   style: TextStyle(color: Colors.grey.shade700, fontSize: 12),
                 ),
               ],
@@ -63,7 +64,7 @@ class TransactionListItem extends StatelessWidget {
                   style: TextStyle(color: Colors.grey[600], fontSize: 12),
                 ),
                 Text(
-                  item.profit!.round().toString(),
+                  formatCurrencyAmount(item.profit ?? 0),
                   style: TextStyle(
                     color: profitColor,
                     fontSize: 16,
