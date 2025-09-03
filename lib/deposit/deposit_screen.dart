@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:mcx/deposit/add_bank_screen.dart';
+import 'package:mcx/deposit/deposit_notifier.dart';
 
 class Bank {
   final String name;
@@ -23,30 +24,7 @@ class DepositScreen extends ConsumerStatefulWidget {
 
 class _DepositScreenState extends ConsumerState<DepositScreen> {
   int _selectedBankIndex = 0;
-  Bank get selectedBank => banks[_selectedBankIndex];
-  final List<Bank> banks = [
-    Bank(
-      name: 'KBZ',
-      account: '1234567890124',
-      icon: 'assets/payments/kbz.png',
-    ),
-    Bank(
-      name: 'A BANK',
-      account: '9876543210124',
-      icon: 'assets/payments/abank.png',
-    ),
-    Bank(
-      name: 'UAB',
-      account: '4567891234124',
-      icon: 'assets/payments/uab.png',
-    ),
-    Bank(
-      name: 'AYA',
-      account: '3216549870124',
-      icon: 'assets/payments/aya.png',
-    ),
-    Bank(name: 'CB', account: '6549873210124', icon: 'assets/payments/cb.png'),
-  ];
+  // Bank get  => banks[_selectedBankIndex];
 
   String _maskAccountNumber(String account) {
     if (account.length <= 3) return account;
@@ -56,6 +34,8 @@ class _DepositScreenState extends ConsumerState<DepositScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final banks = ref.watch(depositNotifierProvider);
+    Bank selectedBank = banks[_selectedBankIndex];
     return Scaffold(
       key: ValueKey(banks.length),
       appBar: AppBar(
@@ -71,8 +51,7 @@ class _DepositScreenState extends ConsumerState<DepositScreen> {
                   CupertinoPageRoute(builder: (context) => AddBankScreen()),
                 );
                 if (result != null) {
-                  banks.add(result);
-                  setState(() {});
+                  ref.read(depositNotifierProvider.notifier).addBank(result);
                 }
               },
               label: Text('Add Bank'),
@@ -228,7 +207,10 @@ class _DepositScreenState extends ConsumerState<DepositScreen> {
                   const SizedBox(height: 32),
 
                   // Continue Button
-                  SizedBox(
+                  Container(
+                    margin: EdgeInsets.only(
+                      // bottom: MediaQuery.viewInsetsOf(context).bottom,
+                    ),
                     height: 52,
                     child: FilledButton(
                       onPressed: () {},
