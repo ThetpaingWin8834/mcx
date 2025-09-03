@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:k_chart_plus/chart_style.dart';
 import 'package:k_chart_plus/k_chart_widget.dart';
 import 'package:mcx/chart/buy_grain_sheet.dart';
-import 'package:mcx/chart/chart_notifier.dart';
 import 'package:mcx/chart/chart_notifier2.dart';
 import 'package:mcx/chart/sell_grain_sheet.dart';
 import 'package:mcx/data/market_notifier.dart';
