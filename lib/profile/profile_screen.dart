@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mcx/deposit/deposit_screen.dart';
 
 class ProfileActionButton extends StatelessWidget {
   final IconData icon;
@@ -99,7 +101,7 @@ class ProfileScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      "Current Balance",
+                      "Wallet",
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -121,32 +123,37 @@ class ProfileScreen extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: FilledButton(
-                    onPressed: () {},
+                  child: FilledButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => DepositScreen(),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.arrow_downward),
+                    label: const Text("Deposit"),
                     style: FilledButton.styleFrom(
-                      // backgroundColor: Colors.green,
-                      // foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: const Text("Deposit"),
                   ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: FilledButton(
+                  child: FilledButton.icon(
                     onPressed: () {},
+                    icon: const Icon(Icons.arrow_upward),
+                    label: const Text("Withdraw"),
                     style: FilledButton.styleFrom(
-                      // backgroundColor: Colors.red,
-                      // foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: const Text("Withdraw"),
                   ),
                 ),
               ],
