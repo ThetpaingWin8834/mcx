@@ -242,7 +242,7 @@ class _AddBankScreenState extends State<AddBankScreen> {
       showSnackBar('Account number empty!');
       return;
     }
-    if (numberController.text.length >= 12) {
+    if (numberController.text.length < 12) {
       showSnackBar('Invalid account number!');
       return;
     }
