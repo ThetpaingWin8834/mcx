@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mcx/deposit/add_bank_screen.dart';
 
 class Bank {
   final String name;
@@ -51,7 +53,21 @@ class _DepositScreenState extends ConsumerState<DepositScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Deposit')),
+      appBar: AppBar(
+        title: const Text('Deposit'),
+        actions: [
+          TextButton.icon(
+            onPressed: () async {
+              Navigator.push(
+                context,
+                CupertinoPageRoute(builder: (context) => AddBankScreen()),
+              );
+            },
+            label: Text('Add Bank'),
+            icon: Icon(Icons.add),
+          ),
+        ],
+      ),
       body: Column(
         children: [
           Padding(
@@ -79,24 +95,148 @@ class _DepositScreenState extends ConsumerState<DepositScreen> {
           ),
           Divider(),
           Padding(
-            padding: EdgeInsets.only(left: 12, right: 12, top: 12),
+            padding: const EdgeInsets.all(24),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Row(
-                  spacing: 16,
-                  children: [
-                    Image.asset(selectedBank.icon, width: 50, height: 50),
-                    Text(selectedBank.name),
-                    Text(_maskAccountNumber(selectedBank.account)),
-                  ],
+                // Bank Info
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 16,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.surfaceVariant.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primary.withOpacity(0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        padding: const EdgeInsets.all(10),
+                        child: Image.asset(
+                          selectedBank.icon,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              selectedBank.name,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              _maskAccountNumber(selectedBank.account),
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withOpacity(0.6),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                Row(
-                  children: [
-                    Text('Amount :'),
-                    Expanded(child: TextField()),
-                  ],
+                const SizedBox(height: 32),
+
+                // Amount Field
+                Text(
+                  'Amount',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withOpacity(0.7),
+                  ),
                 ),
-                FilledButton.tonal(onPressed: () {}, child: Text('Continue')),
+                const SizedBox(height: 8),
+                TextField(
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Theme.of(context).colorScheme.surface,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.outlineVariant,
+                        width: 0.7,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.outlineVariant,
+                        width: 0.7,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.primary,
+                        width: 0.7,
+                      ),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 16,
+                    ),
+                    hintText: 'Enter amount',
+                    hintStyle: TextStyle(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withOpacity(0.4),
+                    ),
+                  ),
+                  keyboardType: TextInputType.number,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+                const SizedBox(height: 32),
+
+                // Continue Button
+                SizedBox(
+                  height: 52,
+                  child: FilledButton(
+                    onPressed: () {},
+                    style: FilledButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                    child: const Text(
+                      'Continue',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
