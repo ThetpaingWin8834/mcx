@@ -1,10 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import 'package:mcx/data/market_notifier.dart';
 import 'package:mcx/home_notifier.dart';
+import 'package:mcx/market/market_screen.dart';
 import 'package:mcx/user_notifier.dart';
 
 class BuyGrainSheet extends ConsumerStatefulWidget {
@@ -57,7 +60,9 @@ class _BuyGrainSheetState extends ConsumerState<BuyGrainSheet> {
       }
       final index = ref.read(selectedGrainNotifierProvider);
       final grain = next[index];
-      priceController.text = grain.currentPrice.toString();
+      priceController.text = ThousandsSeparatorInputFormatter.formatNumber(
+        grain.currentPrice,
+      );
     });
     final user = ref.watch(userNotifierProvider);
     return SingleChildScrollView(
@@ -91,7 +96,7 @@ class _BuyGrainSheetState extends ConsumerState<BuyGrainSheet> {
               ),
               const SizedBox(height: 16),
               Text(
-                'Balance: ${user.currentBalance}',
+                'Balance: ${formatCurrencyAmount(user.currentBalance)}',
                 style: textTheme.labelLarge?.copyWith(
                   color: colorScheme.primary,
                 ),
@@ -122,7 +127,8 @@ class _BuyGrainSheetState extends ConsumerState<BuyGrainSheet> {
               ValueListenableBuilder(
                 valueListenable: amountController,
                 builder: (context, value, child) {
-                  final amount = int.tryParse(value.text) ?? 0;
+                  final amount =
+                      int.tryParse(value.text.replaceAll(',', '')) ?? 0;
                   final percent = (amount / user.currentBalance)
                       .clamp(0, 1)
                       .toDouble();
@@ -135,9 +141,9 @@ class _BuyGrainSheetState extends ConsumerState<BuyGrainSheet> {
                               value: percent,
                               onChanged: (value) {
                                 amountController.text =
-                                    (user.currentBalance * value)
-                                        .round()
-                                        .toString();
+                                    ThousandsSeparatorInputFormatter.formatNumber(
+                                      (user.currentBalance * value).round(),
+                                    );
                               },
                             ),
                           ),
@@ -147,7 +153,10 @@ class _BuyGrainSheetState extends ConsumerState<BuyGrainSheet> {
                       ValueListenableBuilder(
                         valueListenable: priceController,
                         builder: (context, value, child) {
-                          final price = (num.tryParse(value.text) ?? 0).round();
+                          final price =
+                              (num.tryParse(value.text.replaceAll(',', '')) ??
+                                      0)
+                                  .round();
                           final available = amount / price;
                           return Text(
                             'Available: ${available.toStringAsFixed(1)}',
@@ -273,6 +282,11 @@ class PriceInputRow extends StatelessWidget {
             child: TextField(
               readOnly: tradeOptions != TradeOptions.limit,
               controller: priceController,
+              keyboardType: TextInputType.numberWithOptions(),
+              inputFormatters: [
+                ThousandsSeparatorInputFormatter(),
+                // FilteringTextInputFormatter.digitsOnly,
+              ],
               decoration: const InputDecoration(
                 isDense: true,
                 border: InputBorder.none,
@@ -316,6 +330,7 @@ class AmountInputRow extends ConsumerWidget {
           Expanded(
             child: TextFormField(
               controller: amountController,
+              inputFormatters: [ThousandsSeparatorInputFormatter()],
               keyboardType: const TextInputType.numberWithOptions(),
               decoration: const InputDecoration(
                 isDense: true,
@@ -323,7 +338,8 @@ class AmountInputRow extends ConsumerWidget {
               ),
               autovalidateMode: AutovalidateMode.always,
               validator: (value) {
-                final entered = int.tryParse(value ?? '') ?? 0;
+                final entered =
+                    int.tryParse(value?.replaceAll(',', '') ?? '') ?? 0;
                 if (entered > user.currentBalance) {
                   return 'Exceeds balance (${user.currentBalance})';
                 }
@@ -378,4 +394,60 @@ enum TradeOptions {
     TradeOptions.market => 'Market Price',
     TradeOptions.limit => 'Limit',
   };
+}
+
+class ThousandsSeparatorInputFormatter extends TextInputFormatter {
+  static String formatNumber(int number) {
+    final formatter = NumberFormat.decimalPattern();
+    return formatter.format(number);
+  }
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) {
+      return TextEditingValue(
+        text: '',
+        selection: TextSelection.collapsed(offset: 0),
+      );
+    }
+
+    // Remove all non-digit characters
+    final digitsOnly = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
+    if (digitsOnly.isEmpty) {
+      return TextEditingValue(
+        text: '',
+        selection: TextSelection.collapsed(offset: 0),
+      );
+    }
+
+    // Format number with commas
+    final number = int.parse(digitsOnly);
+    final newText = formatNumber(number);
+
+    // Calculate new cursor position
+    int commaCountBefore = _countCommas(
+      oldValue.text,
+      oldValue.selection.start,
+    );
+    int commaCountAfter = _countCommas(newText, newText.length);
+    int baseOffset =
+        newValue.selection.start + (commaCountAfter - commaCountBefore);
+    int selectionIndex = baseOffset.clamp(0, newText.length);
+
+    return TextEditingValue(
+      text: newText,
+      selection: TextSelection.collapsed(offset: selectionIndex),
+    );
+  }
+
+  int _countCommas(String text, int endIndex) {
+    int count = 0;
+    for (int i = 0; i < endIndex && i < text.length; i++) {
+      if (text[i] == ',') count++;
+    }
+    return count;
+  }
 }
