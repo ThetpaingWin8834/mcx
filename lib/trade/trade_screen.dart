@@ -43,7 +43,7 @@ class TradeScreen extends ConsumerStatefulWidget {
 }
 
 class _TradeScreenState extends ConsumerState<TradeScreen> {
-  final account = const {'balance': '100000'};
+  final account = const {'balance': '100,000'};
   String getRandomName() {
     final grainList = ref.read(marketProvider);
     return grainList[Random().nextInt(grainList.length)].name;
