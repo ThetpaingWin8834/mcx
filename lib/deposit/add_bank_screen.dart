@@ -67,53 +67,56 @@ class _AddBankScreenState extends State<AddBankScreen> {
             link: _layerLink,
             showWhenUnlinked: false,
             offset: Offset(0, size.height + 5),
-            child: Material(
-              elevation: 4,
-              borderRadius: BorderRadius.circular(12),
-              color: Colors.white,
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey.shade300),
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.08),
-                      blurRadius: 12,
-                      offset: Offset(0, 4),
-                    ),
-                  ],
-                  color: Colors.white,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: banks
-                      .map(
-                        (bank) => InkWell(
-                          onTap: () {
-                            setState(() {
-                              selectedBank = bank;
-                            });
-                            _closeDropdown();
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 12,
-                            ),
-                            child: Row(
-                              children: [
-                                Image.asset(bank.icon, width: 40, height: 40),
-                                const SizedBox(width: 12),
-                                Text(
-                                  bank.name,
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                              ],
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Material(
+                elevation: 4,
+                borderRadius: BorderRadius.circular(12),
+                color: Colors.white,
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade300),
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.08),
+                        blurRadius: 12,
+                        offset: Offset(0, 4),
+                      ),
+                    ],
+                    color: Colors.white,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: banks
+                        .map(
+                          (bank) => InkWell(
+                            onTap: () {
+                              setState(() {
+                                selectedBank = bank;
+                              });
+                              _closeDropdown();
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 12,
+                              ),
+                              child: Row(
+                                children: [
+                                  Image.asset(bank.icon, width: 40, height: 40),
+                                  const SizedBox(width: 12),
+                                  Text(
+                                    bank.name,
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      )
-                      .toList(),
+                        )
+                        .toList(),
+                  ),
                 ),
               ),
             ),
@@ -170,6 +173,7 @@ class _AddBankScreenState extends State<AddBankScreen> {
                         style: TextStyle(fontSize: 16, color: Colors.grey),
                       ),
                     Icon(
+                      key: ValueKey(_isDropdownOpen),
                       _isDropdownOpen
                           ? Icons.arrow_drop_up
                           : Icons.arrow_drop_down,
