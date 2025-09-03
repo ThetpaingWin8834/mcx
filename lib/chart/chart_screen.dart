@@ -45,7 +45,7 @@ class _ChartScreenState extends ConsumerState<ChartScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       button(
                         name: 'SELL',
@@ -89,18 +89,33 @@ class _ChartScreenState extends ConsumerState<ChartScreen> {
     VoidCallback? onClick,
     Color color = Colors.blue,
   }) {
-    return GestureDetector(
-      onTap: onClick,
-      child: Container(
-        alignment: Alignment.center,
-        padding: EdgeInsets.symmetric(vertical: 12),
-        margin: EdgeInsets.symmetric(horizontal: 24),
-        width: 100,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          color: color,
+    return FilledButton(
+      onPressed: onClick,
+      child: Text(name),
+      style: FilledButton.styleFrom(
+        minimumSize: Size(120, 45),
+        backgroundColor: color,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 24),
+
+      child: Material(
+        child: InkWell(
+          onTap: onClick,
+          child: Container(
+            alignment: Alignment.center,
+            padding: EdgeInsets.symmetric(vertical: 12),
+
+            width: 100,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: color,
+            ),
+            child: Text(name, style: TextStyle(color: getContrastColor(color))),
+          ),
         ),
-        child: Text(name, style: TextStyle(color: getContrastColor(color))),
       ),
     );
   }
