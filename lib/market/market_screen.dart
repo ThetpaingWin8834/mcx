@@ -15,39 +15,46 @@ class _MarketScreenState extends ConsumerState<MarketScreen> {
   Widget build(BuildContext context) {
     final market = ref.watch(marketProvider);
     ref.invalidate(selectedGrainNotifierProvider);
-
+    final borderColor = Theme.of(context).colorScheme.surfaceContainerHighest;
     return Scaffold(
       appBar: AppBar(title: Text('MCX . Market')),
-      body: ListView.separated(
+      body: ListView.builder(
         itemCount: market.length,
-        separatorBuilder: (context, index) => Divider(),
+
         itemBuilder: (context, index) {
           final grain = market[index];
-          return ListTile(
-            title: Text(grain.name),
-            onTap: () {
-              ref.read(selectedGrainNotifierProvider.notifier).state = index;
-              ref.read(homeNotifierProvider.notifier).state = 1;
-            },
-            trailing: RichText(
-              textAlign: TextAlign.center,
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: '${grain.openPrice} . ',
-                    style: const TextStyle(color: Colors.black, fontSize: 14),
-                  ),
-                  TextSpan(
-                    text: '${grain.currentPrice}',
-                    style: TextStyle(
-                      color: grain.currentPrice >= grain.openPrice
-                          ? Colors.green
-                          : Colors.red,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+          return Container(
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: borderColor, width: 0.7),
+              ),
+            ),
+            child: ListTile(
+              title: Text(grain.name),
+              onTap: () {
+                ref.read(selectedGrainNotifierProvider.notifier).state = index;
+                ref.read(homeNotifierProvider.notifier).state = 1;
+              },
+              trailing: RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: '${grain.openPrice} . ',
+                      style: const TextStyle(color: Colors.black, fontSize: 14),
                     ),
-                  ),
-                ],
+                    TextSpan(
+                      text: '${grain.currentPrice}',
+                      style: TextStyle(
+                        color: grain.currentPrice >= grain.openPrice
+                            ? Colors.green
+                            : Colors.red,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );
