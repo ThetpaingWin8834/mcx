@@ -18,10 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'MCX',
       theme: ThemeData(
-        // appBarTheme: AppBarTheme(
-        //   backgroundColor: scheme.surfaceContainer,
-        //   titleTextStyle: TextStyle(color: Colors.white, fontSize: 18),
-        // ),
+        appBarTheme: AppBarTheme(surfaceTintColor: Colors.transparent),
         colorScheme: scheme,
       ),
       home: HomeScreen(),
