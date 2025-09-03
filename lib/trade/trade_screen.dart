@@ -60,7 +60,7 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
       symbol: getRandomName(),
       action: 'buy 2',
       fromTo: '150,000 → 100,000',
-      profit: '-50000',
+      profit: '-50,000',
     ),
     Position(
       symbol: getRandomName(),
@@ -474,7 +474,7 @@ class PositionDetailWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final profit = int.parse(position.profit);
+    final profit = int.parse(position.profit.split(',').join());
 
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
