@@ -74,9 +74,11 @@ class _ChartScreenState extends ConsumerState<ChartScreen> {
                 ),
                 Divider(),
                 Expanded(
-                  child: OrderSellAndBuy(
-                    onBuyClick: onBuyClick,
-                    onSellClick: onSellClick,
+                  child: SingleChildScrollView(
+                    child: OrderSellAndBuy(
+                      onBuyClick: onBuyClick,
+                      onSellClick: onSellClick,
+                    ),
                   ),
                 ),
               ],
