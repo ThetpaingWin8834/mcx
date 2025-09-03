@@ -52,9 +52,15 @@ class MarketNotifier extends Notifier<List<Grain>> {
     });
     _startSimulation();
     return [
-      Grain(name: 'RICE', openPrice: 100000, currentPrice: 100000),
-      Grain(name: 'BEAN', openPrice: 150000, currentPrice: 150000),
-      Grain(name: 'CHILLI', openPrice: 50000, currentPrice: 50000),
+        Grain(name: 'Black Mapte', openPrice: 100000, currentPrice: 100000),
+        Grain(name: 'Toor Whole', openPrice: 150000, currentPrice: 150000),
+        Grain(name: 'Green Mung Beans', openPrice: 120000, currentPrice: 120000),
+        Grain(name: 'Black Eye Beans', openPrice: 90000, currentPrice: 90000),
+        Grain(name: 'Chilli', openPrice: 50000, currentPrice: 50000),
+        Grain(name: 'Onions', openPrice: 40000, currentPrice: 40000),
+        Grain(name: 'A12DPS', openPrice: 110000, currentPrice: 110000),
+        Grain(name: 'B12S', openPrice: 130000, currentPrice: 130000),
+        Grain(name: '25% Emata', openPrice: 80000, currentPrice: 80000),
     ];
   }
 }
