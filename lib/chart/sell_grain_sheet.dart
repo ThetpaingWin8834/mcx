@@ -9,7 +9,8 @@ class SellGrainSheet extends ConsumerStatefulWidget {
   static show(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      useSafeArea: true,
+      useSafeArea: false,
+      isScrollControlled: true,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -160,6 +161,7 @@ class _SellGrainSheetState extends ConsumerState<SellGrainSheet> {
               ),
               const SizedBox(height: 28),
               SellButton(onPressed: () {}),
+              SizedBox(height: MediaQuery.viewInsetsOf(context).bottom),
             ],
           ),
         ),
