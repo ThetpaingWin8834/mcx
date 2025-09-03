@@ -1,4 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+
 import 'package:mcx/deposit/deposit_screen.dart';
 
 class AddBankScreen extends StatefulWidget {
@@ -9,17 +11,23 @@ class AddBankScreen extends StatefulWidget {
 }
 
 class _AddBankScreenState extends State<AddBankScreen> {
+  final nameController = TextEditingController();
+  final numberController = TextEditingController();
+  final phController = TextEditingController();
+  @override
+  void dispose() {
+    nameController.dispose();
+    numberController.dispose();
+    phController.dispose();
+    super.dispose();
+  }
+
   Bank? selectedBank;
   final banks = [
     Bank(
-      name: 'A BANK',
-      account: '9876543210124',
-      icon: 'assets/payments/abank.png',
-    ),
-    Bank(
-      name: 'UAB',
+      name: 'MTB',
       account: '4567891234124',
-      icon: 'assets/payments/uab.png',
+      icon: 'assets/payments/mtb.png',
     ),
   ];
 
@@ -39,13 +47,17 @@ class _AddBankScreenState extends State<AddBankScreen> {
   void _openDropdown() {
     _overlayEntry = _createOverlayEntry();
     Overlay.of(context)?.insert(_overlayEntry!);
-    _isDropdownOpen = true;
+    setState(() {
+      _isDropdownOpen = true;
+    });
   }
 
   void _closeDropdown() {
     _overlayEntry?.remove();
     _overlayEntry = null;
-    _isDropdownOpen = false;
+    setState(() {
+      _isDropdownOpen = false;
+    });
   }
 
   OverlayEntry _createOverlayEntry() {
@@ -104,7 +116,12 @@ class _AddBankScreenState extends State<AddBankScreen> {
                               ),
                               child: Row(
                                 children: [
-                                  Image.asset(bank.icon, width: 40, height: 40),
+                                  Image.asset(
+                                    bank.icon,
+                                    width: 40,
+                                    height: 40,
+                                    fit: BoxFit.cover,
+                                  ),
                                   const SizedBox(width: 12),
                                   Text(
                                     bank.name,
@@ -159,6 +176,7 @@ class _AddBankScreenState extends State<AddBankScreen> {
                             selectedBank!.icon,
                             width: 40,
                             height: 40,
+                            fit: BoxFit.cover,
                           ),
                           const SizedBox(width: 12),
                           Text(
@@ -173,14 +191,108 @@ class _AddBankScreenState extends State<AddBankScreen> {
                         style: TextStyle(fontSize: 16, color: Colors.grey),
                       ),
                     Icon(
-                      key: ValueKey(_isDropdownOpen),
                       _isDropdownOpen
                           ? Icons.arrow_drop_up
                           : Icons.arrow_drop_down,
+                      key: ValueKey<bool>(_isDropdownOpen),
                     ),
                   ],
                 ),
               ),
+            ),
+          ),
+          SizedBox(height: 24),
+          Divider(),
+          FieldRow(
+            title: 'Account Name',
+            keyboardType: TextInputType.name,
+            controller: nameController,
+          ),
+          FieldRow(
+            title: 'Account Number',
+            keyboardType: TextInputType.numberWithOptions(),
+            controller: numberController,
+          ),
+          FieldRow(
+            title: 'Phone Number',
+            keyboardType: TextInputType.numberWithOptions(),
+            controller: phController,
+          ),
+          SizedBox(height: 32),
+          FilledButton(
+            onPressed: onConfirm,
+            style: FilledButton.styleFrom(minimumSize: Size(120, 45)),
+            child: Text('Confirm'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void onConfirm() {
+    if (selectedBank == null) {
+      showSnackBar('Choose bank');
+      return;
+    }
+    if (nameController.text.isEmpty) {
+      showSnackBar('Name empty!');
+      return;
+    }
+    if (numberController.text.isEmpty) {
+      showSnackBar('Account number empty!');
+      return;
+    }
+    if (numberController.text.length >= 12) {
+      showSnackBar('Invalid account number!');
+      return;
+    }
+    if (phController.text.isEmpty) {
+      showSnackBar('Please enter your phone number!');
+      return;
+    }
+    Navigator.pop(
+      context,
+      Bank(
+        account: numberController.text,
+        name: selectedBank!.name,
+        icon: selectedBank!.icon,
+      ),
+    );
+  }
+
+  void showSnackBar(String text) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+  }
+}
+
+class FieldRow extends StatelessWidget {
+  final String title;
+  final TextInputType keyboardType;
+  final TextEditingController controller;
+  const FieldRow({
+    Key? key,
+    required this.title,
+    required this.keyboardType,
+    required this.controller,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        spacing: 16,
+        children: [
+          Expanded(
+            flex: 3,
+            child: Text('$title : ', style: TextStyle(fontSize: 15)),
+          ),
+          Expanded(
+            flex: 5,
+            child: TextField(
+              keyboardType: keyboardType,
+              controller: controller,
+              decoration: InputDecoration(),
             ),
           ),
         ],
