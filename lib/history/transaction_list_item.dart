@@ -48,7 +48,7 @@ class TransactionListItem extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  'in ${item.lotSize} at ${item.price}',
+                  'in ${item.lotSize} at ${item.price.round()}',
                   style: TextStyle(color: Colors.grey.shade700, fontSize: 12),
                 ),
               ],
@@ -63,7 +63,7 @@ class TransactionListItem extends StatelessWidget {
                   style: TextStyle(color: Colors.grey[600], fontSize: 12),
                 ),
                 Text(
-                  item.profit!.toStringAsFixed(2),
+                  item.profit!.round().toString(),
                   style: TextStyle(
                     color: profitColor,
                     fontSize: 16,
