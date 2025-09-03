@@ -4,6 +4,7 @@ import 'package:k_chart_plus/chart_style.dart';
 import 'package:k_chart_plus/k_chart_widget.dart';
 import 'package:mcx/chart/buy_grain_sheet.dart';
 import 'package:mcx/chart/chart_notifier2.dart';
+import 'package:mcx/chart/order_entry.dart';
 import 'package:mcx/chart/sell_grain_sheet.dart';
 import 'package:mcx/data/market_notifier.dart';
 import 'package:mcx/home_notifier.dart';
@@ -40,21 +41,22 @@ class _ChartScreenState extends ConsumerState<ChartScreen> {
       body: candles.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : Column(
+              spacing: 12,
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      button(
-                        name: 'SELL',
-                        color: Colors.redAccent,
-                        onClick: onSellClick,
-                      ),
-                      button(name: 'BUY', onClick: onBuyClick),
-                    ],
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(vertical: 12),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //     children: [
+                //       button(
+                //         name: 'SELL',
+                //         color: Colors.redAccent,
+                //         onClick: onSellClick,
+                //       ),
+                //       button(name: 'BUY', onClick: onBuyClick),
+                //     ],
+                //   ),
+                // ),
                 KChartWidget(
                   candles[currentGrainIndex]
                       .map((e) => e.toKLineEntity())
@@ -69,6 +71,13 @@ class _ChartScreenState extends ConsumerState<ChartScreen> {
                   volHidden: true,
                   isTrendLine: false,
                   timeFormat: TimeFormat.YEAR_MONTH_DAY_WITH_HOUR,
+                ),
+                Divider(),
+                Expanded(
+                  child: OrderSellAndBuy(
+                    onBuyClick: onBuyClick,
+                    onSellClick: onSellClick,
+                  ),
                 ),
               ],
             ),
@@ -97,26 +106,15 @@ class _ChartScreenState extends ConsumerState<ChartScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24),
+  }
+}
 
-      child: Material(
-        child: InkWell(
-          onTap: onClick,
-          child: Container(
-            alignment: Alignment.center,
-            padding: EdgeInsets.symmetric(vertical: 12),
+class ActionOrder extends ConsumerWidget {
+  const ActionOrder({super.key});
 
-            width: 100,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: color,
-            ),
-            child: Text(name, style: TextStyle(color: getContrastColor(color))),
-          ),
-        ),
-      ),
-    );
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Container();
   }
 }
 
