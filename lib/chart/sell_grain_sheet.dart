@@ -159,7 +159,7 @@ class _SellGrainSheetState extends ConsumerState<SellGrainSheet> {
                 },
               ),
               const SizedBox(height: 28),
-              BuyButton(onPressed: () {}),
+              SellButton(onPressed: () {}),
             ],
           ),
         ),
@@ -328,10 +328,10 @@ class AmountInputRow extends ConsumerWidget {
   }
 }
 
-class BuyButton extends StatelessWidget {
+class SellButton extends StatelessWidget {
   final VoidCallback onPressed;
 
-  const BuyButton({super.key, required this.onPressed});
+  const SellButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -355,7 +355,7 @@ class BuyButton extends StatelessWidget {
           elevation: 4,
           shadowColor: colorScheme.primary.withOpacity(0.4),
         ),
-        child: const Text('Buy'),
+        child: const Text('Sell'),
       ),
     );
   }
