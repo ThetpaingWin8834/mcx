@@ -1,7 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mcx/data/market_notifier.dart';
 import 'package:mcx/home_notifier.dart';
 
 class Position {
@@ -41,37 +44,41 @@ class TradeScreen extends ConsumerStatefulWidget {
 
 class _TradeScreenState extends ConsumerState<TradeScreen> {
   final account = const {'balance': '100000'};
+  String getRandomName() {
+    final grainList = ref.read(marketProvider);
+    return grainList[Random().nextInt(grainList.length)].name;
+  }
 
-  static const positions = [
+  late final positions = [
     Position(
-      symbol: 'RICE',
+      symbol: getRandomName(),
       action: 'buy 1',
       fromTo: '100000 → 150000',
       profit: '50000',
     ),
     Position(
-      symbol: 'BEAN',
+      symbol: getRandomName(),
       action: 'buy 2',
       fromTo: '150000 → 100000',
       profit: '-50000',
     ),
     Position(
-      symbol: 'CHILLI',
+      symbol: getRandomName(),
       action: 'buy 3',
       fromTo: '50000 → 10000',
       profit: '50000',
     ),
     Position(
-      symbol: 'RICE',
+      symbol: getRandomName(),
       action: 'buy 1',
       fromTo: '100000 → 200000',
       profit: '100000',
     ),
   ];
 
-  static const orders = [
+  late final orders = [
     Order(
-      symbol: 'RICE',
+      symbol: getRandomName(),
       type: 'sell limit',
       size: '1.00 / 0.00 at 0.85000',
       state: 'placed',
