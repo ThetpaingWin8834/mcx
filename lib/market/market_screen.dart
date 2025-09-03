@@ -13,9 +13,20 @@ class MarketScreen extends ConsumerStatefulWidget {
 
 class _MarketScreenState extends ConsumerState<MarketScreen> {
   @override
+  void didUpdateWidget(covariant MarketScreen oldWidget) {
+    print('diiiiiiî');
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    ref.invalidate(selectedGrainNotifierProvider);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final market = ref.watch(marketProvider);
-    ref.invalidate(selectedGrainNotifierProvider);
     final borderColor = Theme.of(context).colorScheme.surfaceContainerHighest;
     return Scaffold(
       appBar: AppBar(title: Text('MCX . Market')),
