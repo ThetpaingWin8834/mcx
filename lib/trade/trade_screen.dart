@@ -53,26 +53,26 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
     Position(
       symbol: getRandomName(),
       action: 'buy 1',
-      fromTo: '100000 → 150000',
-      profit: '50000',
+      fromTo: '100,000 → 1500,00',
+      profit: '50,000',
     ),
     Position(
       symbol: getRandomName(),
       action: 'buy 2',
-      fromTo: '150000 → 100000',
+      fromTo: '150,000 → 100,000',
       profit: '-50000',
     ),
     Position(
       symbol: getRandomName(),
       action: 'buy 3',
-      fromTo: '50000 → 10000',
-      profit: '50000',
+      fromTo: '50,000 → 10,000',
+      profit: '50,000',
     ),
     Position(
       symbol: getRandomName(),
       action: 'buy 1',
-      fromTo: '100000 → 200000',
-      profit: '100000',
+      fromTo: '100,000 → 200,000',
+      profit: '100,000',
     ),
   ];
 
