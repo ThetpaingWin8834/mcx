@@ -73,7 +73,7 @@ class _BuyGrainSheetState extends ConsumerState<BuyGrainSheet> {
             ),
           ],
         ),
-        padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
+        padding: EdgeInsets.fromLTRB(24, 24, 24, 32),
         child: Form(
           key: formKey,
           child: Column(
@@ -168,6 +168,7 @@ class _BuyGrainSheetState extends ConsumerState<BuyGrainSheet> {
                   Navigator.pop(context);
                 },
               ),
+              SizedBox(height: MediaQuery.viewInsetsOf(context).bottom),
             ],
           ),
         ),
