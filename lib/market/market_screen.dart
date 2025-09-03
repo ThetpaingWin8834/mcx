@@ -98,23 +98,8 @@ class _MarketScreenState extends ConsumerState<MarketScreen> {
                       ],
                     ),
                   ),
-                  Text.rich(
-                    TextSpan(
-                      children: [
-                        WidgetSpan(
-                          child: Icon(
-                            grain.currentPrice >= grain.openPrice
-                                ? Icons.trending_up_rounded
-                                : Icons.trending_down_rounded,
-                            size: 16,
-                          ),
-                        ),
-                        TextSpan(
-                          text:
-                              '  ${(((grain.currentPrice - grain.openPrice) / grain.openPrice) * 100).toStringAsFixed(1)}%',
-                        ),
-                      ],
-                    ),
+                  Text(
+                    '${(((grain.currentPrice - grain.openPrice) / grain.openPrice) * 100).toStringAsFixed(1)}%',
                     style: TextStyle(
                       color: grain.currentPrice >= grain.openPrice
                           ? Colors.green
