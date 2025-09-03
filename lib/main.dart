@@ -11,12 +11,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = ColorScheme.fromSeed(seedColor: Colors.teal);
+    final scheme = ColorScheme.fromSeed(
+      seedColor: Colors.blueAccent,
+      brightness: Brightness.light,
+    );
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         // appBarTheme: AppBarTheme(
-        //   backgroundColor: scheme.primary,
+        //   backgroundColor: scheme.surfaceContainer,
         //   titleTextStyle: TextStyle(color: Colors.white, fontSize: 18),
         // ),
         colorScheme: scheme,
